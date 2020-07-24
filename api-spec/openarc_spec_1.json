@@ -1,0 +1,464 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "openArc - getting structured data from music games",
+		"description": "openArc致力于音游机器人开发者服务，为开发者们提供统一且优质的返回格式",
+		"version": "1.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:1145/v1"
+		},
+		{
+			"url": "https://localhost:1145/v1"
+		}
+	],
+	"tags": [
+		{
+			"name": "arcaea",
+			"description": "endpoints for game Arcaea"
+		}],
+	"paths": {
+		"/arcaea/pack": {
+			"summary": "Get all the pack data",
+			"get": {
+				"tags": ["arcaea"],
+				"summary": "Get all current pack data",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Pack"
+									}
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Pack"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unknown error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["arcaea"],
+				"summary": "Add new song pack to database",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unknown error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/arcaea/pack/{packid}":{
+			"parameters": [
+				{
+					"in": "path",
+					"name": "packid",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				}
+			],
+			"summary": "Get pack data by packID",
+			"get": {
+				"tags": ["arcaea"],
+				"summary": "Get current pack data",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/Pack"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/Pack"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": ["arcaea"],
+				"summary": "Update current song pack in database",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unknown error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["arcaea"],
+				"summary": "Delete a song pack in database",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unknown error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/arcaea/song": {
+			"parameters": [
+				{
+					"$ref": "#/components/parameters/limit"
+				},
+				{
+					"$ref": "#/components/parameters/offset"
+				}
+			],
+			"get": {
+				"tags": ["arcaea"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Song"
+									}
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Song"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unknown error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResult"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/arcaea/song/{songid}": {
+			"parameters": [
+				{
+					"required": true,
+					"in": "path",
+					"name": "songid",
+					"schema": {
+						"type": "string"
+					}
+				}
+			],
+			"get": {
+				"tags": ["arcaea"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/arcaea/story": {
+			"get": {
+				"tags": ["arcaea"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"limit": {
+				"name": "limit",
+				"in": "query",
+				"schema": {
+					"type": "number",
+					"default": 5,
+					"format": "int64",
+					"minimum": 0
+				}
+			},
+			"offset": {
+				"name": "offset",
+				"in": "query",
+				"schema": {
+					"type": "number",
+					"default": 0,
+					"format": "int64",
+					"minimum": 0
+				}
+			},
+			"filter": {
+				"name": "filter",
+				"in": "query",
+				"schema": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"schemas": {
+			"APIResult": {
+				"required": [
+					"success"
+				],
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"default": false
+					},
+					"content": {
+						"type": "object",
+						"properties": {}
+					}
+				}
+			},
+			"Pack": {
+				"required": [
+					"id"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "曲包ID，用作唯一标识"
+					},
+					"plus_character": {
+						"type": "integer",
+						"description": "附加曲包角色"
+					},
+					"name_localized": {
+						"type": "object",
+						"description": "曲包名称本地化",
+						"items": {
+							"$ref": "#/components/schemas/localization"
+						}
+					},
+					"description_localized": {
+						"type": "object",
+						"description": "曲包描述本地化",
+						"items": {
+							"$ref": "#/components/schemas/localization"
+						}
+					},
+					"custom-banner": {
+						"type": "boolean",
+						"description": "未知意义",
+						"default": false
+					}
+				}
+			},
+			"Song": {
+				"type": "object",
+				"example": {
+					"id": "arcahv",
+					"title_localized": {
+						"en": "Arcahv"
+					},
+					"artist": "Feryquitous",
+					"bpm": "191",
+					"bpm_base": 191,
+					"set": "vs",
+					"purchase": "vs",
+					"audioPreview": 1256,
+					"audioPreviewEnd": 31413,
+					"side": 0,
+					"bg": "arcahv",
+					"remote_dl": false,
+					"world_unlock": false,
+					"songlist_hidden": true,
+					"date": 1590537606,
+					"version": "3.0",
+					"difficulties": [
+						{
+							"ratingClass": 0,
+							"chartDesigner": "∅",
+							"jacketDesigner": "シエラ",
+							"rating": 4,
+							"hidden_until_unlocked": true
+						},
+						{
+							"ratingClass": 1,
+							"chartDesigner": "∅",
+							"jacketDesigner": "シエラ",
+							"rating": 7,
+							"hidden_until_unlocked": true
+						},
+						{
+							"ratingClass": 2,
+							"chartDesigner": "∅",
+							"jacketDesigner": "シエラ",
+							"rating": 9,
+							"hidden_until_unlocked": true,
+							"ratingPlus": true
+						}
+					]
+				}
+			},
+			"localization": {
+				"required": [
+					"en"
+				],
+				"type": "object",
+				"properties": {
+					"en": {
+						"type": "string",
+						"description": "英文本地化信息",
+						"default": "No data available"
+					},
+					"ja": {
+						"type": "string",
+						"description": "日文本地化信息"
+					},
+					"ko": {
+						"type": "string",
+						"description": "韩文本地化信息"
+					},
+					"zh-Hant": {
+						"type": "string",
+						"description": "繁体中文本地化信息"
+					},
+					"zh-Hans": {
+						"type": "string",
+						"description": "简体中文本地化信息",
+						"default": "暂无数据"
+					}
+				},
+				"example": {
+					"en": "From over the horizon come three\npowerful new songs from SEGA's arcade\nrhythm game CHUNITHM!\n\nJoin Tairitsu and Chuni Penguin as\nyou take on this monumental challenge!",
+					"ja": "地平線の向こうから、\n3つの強力な楽曲がやってくる…！\nSEGAのアーケードリズムゲーム、\nCHUNITHMとのコラボレーション！\n\n対立とチュウニペンギンと共に、\n難敵たちに挑戦しよう！",
+					"ko": "3곡의 새로운 음악이\nSEGA의 아케이드 리듬게임 'CHUNITHM'을 통해\n수평선 너머에서 강하게 접근 중!\n\n타이리츠와 츄니펭귄과 함께,\n기념이 될 만한 엄청난 도전에 참여하세요!",
+					"zh-Hant": "三首來自世嘉開發的街機節奏遊戲\n《CHUNITHM》的震撼新曲\n已於天際展露鋒芒！\n\n跟隨對立與中二企鵝一起\n共同開始這一系列里程碑式的挑戰！",
+					"zh-Hans": "三首来自世嘉开发的街机节奏游戏\n《CHUNITHM》的震撼新曲\n已于天际展露锋芒！\n\n跟随对立与中二企鹅一起\n共同开始这一系列里程碑式的挑战！"
+				}
+			}
+		}
+	}
+}
