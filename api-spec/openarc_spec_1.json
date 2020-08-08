@@ -7,22 +7,43 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost:1145/v1"
-		},
-		{
-			"url": "https://localhost:1145/v1"
+			"url": "https://arcapi.moezsoft.com/{version}",
+			"variables": {
+				"version": {
+					"enum": [
+						"v1",
+						"v2"
+					],
+					"default": "v2"
+				}
+			}
 		}
 	],
 	"tags": [
 		{
 			"name": "arcaea",
-			"description": "endpoints for game Arcaea"
-		}],
+			"description": "game content endpoints for game Arcaea"
+		},
+		{
+			"name": "arcaea-meta",
+			"description": "application meta contents for game Arcaea"
+		},
+		{
+			"name": "standard",
+			"description": "basic apis for game Arcaea"
+		},
+		{
+			"name": "forward",
+			"description": "Used for online pvp"
+		}
+	],
 	"paths": {
-		"/arcaea/pack": {
+		"/meta/pack": {
 			"summary": "Get all the pack data",
 			"get": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"summary": "Get all current pack data",
 				"responses": {
 					"200": {
@@ -64,7 +85,9 @@
 				}
 			},
 			"post": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"summary": "Add new song pack to database",
 				"responses": {
 					"200": {
@@ -100,7 +123,7 @@
 				}
 			}
 		},
-		"/arcaea/pack/{packid}":{
+		"/meta/pack/{packid}": {
 			"parameters": [
 				{
 					"in": "path",
@@ -113,7 +136,9 @@
 			],
 			"summary": "Get pack data by packID",
 			"get": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"summary": "Get current pack data",
 				"responses": {
 					"200": {
@@ -136,7 +161,9 @@
 				}
 			},
 			"put": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"summary": "Update current song pack in database",
 				"responses": {
 					"200": {
@@ -172,7 +199,9 @@
 				}
 			},
 			"delete": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"summary": "Delete a song pack in database",
 				"responses": {
 					"200": {
@@ -208,7 +237,7 @@
 				}
 			}
 		},
-		"/arcaea/song": {
+		"/song": {
 			"parameters": [
 				{
 					"$ref": "#/components/parameters/limit"
@@ -218,7 +247,9 @@
 				}
 			],
 			"get": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -259,7 +290,7 @@
 				}
 			}
 		},
-		"/arcaea/song/{songid}": {
+		"/song/{songid}": {
 			"parameters": [
 				{
 					"required": true,
@@ -271,7 +302,9 @@
 				}
 			],
 			"get": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"responses": {
 					"200": {
 						"description": "OK"
@@ -279,15 +312,196 @@
 				}
 			}
 		},
-		"/arcaea/story": {
+		"/story": {
 			"get": {
-				"tags": ["arcaea"],
+				"tags": [
+					"arcaea"
+				],
 				"responses": {
 					"200": {
 						"description": "OK"
 					}
 				}
 			}
+		},
+		"/meta/ver": {
+			"summary": "Get arcapi and app version, used for further development",
+			"get": {
+				"tags": [
+					"arcaea-meta"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"arcapi": {
+											"$ref": "#/components/schemas/arc_api_ver"
+										},
+										"arcapp": {
+											"$ref": "#/components/schemas/arc_ver_link"
+										}
+									}
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"arcapi": {
+											"$ref": "#/components/schemas/arc_api_ver"
+										},
+										"arcapp": {
+											"$ref": "#/components/schemas/arc_ver_link"
+										}
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "bad"
+					}
+				}
+			}
+		},
+		"/userinfo": {
+			"summary": "Get basic user info",
+			"parameters": [
+				{
+					"in": "query",
+					"name": "usercode",
+					"required": true,
+					"schema": {
+						"$ref": "#/components/schemas/usercode"
+					}
+				},
+				{
+					"in": "query",
+					"name": "recent",
+					"required": false,
+					"schema": {
+						"type": "boolean",
+						"nullable": true
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/components/schemas/arc_user"
+					},
+					"default": {
+						"$ref": "#/components/schemas/APIResult"
+					}
+				}
+			}
+		},
+		"/userbest": {
+			"summary": "Get user best score",
+			"parameters": [
+				{
+					"name": "usercode",
+					"in": "query",
+					"required": true,
+					"schema": {
+						"$ref": "#/components/schemas/usercode"
+					}
+				},
+				{
+					"name": "songname",
+					"in": "query",
+					"required": true,
+					"schema": {
+						"type": "string"
+					}
+				},
+				{
+					"name": "difficulty",
+					"in": "query",
+					"required": true,
+					"schema": {
+						"$ref": "#/components/schemas/difficulty"
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/best_score"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/userbest30": {
+			"summary": "Get user best top 30 score.",
+			"parameters": [
+				{
+					"in": "query",
+					"name": "usercode",
+					"required": true,
+					"schema": {
+						"$ref": "#/components/schemas/usercode"
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"best30_avg": {
+											"type": "number"
+										},
+										"recent10_avg": {
+											"type": "number"
+										},
+										"best30_list": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/best_score"
+											},
+											"maxLength": 30
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/songinfo": {
+		},
+		"/songalias": {
+		},
+		"/random": {
+		},
+		"/connect": {
 		}
 	},
 	"components": {
@@ -326,13 +540,13 @@
 		"schemas": {
 			"APIResult": {
 				"required": [
-					"success"
+					"status"
 				],
 				"type": "object",
 				"properties": {
-					"success": {
-						"type": "boolean",
-						"default": false
+					"status": {
+						"type": "number",
+						"default": 0
 					},
 					"content": {
 						"type": "object",
@@ -457,6 +671,397 @@
 					"ko": "3곡의 새로운 음악이\nSEGA의 아케이드 리듬게임 'CHUNITHM'을 통해\n수평선 너머에서 강하게 접근 중!\n\n타이리츠와 츄니펭귄과 함께,\n기념이 될 만한 엄청난 도전에 참여하세요!",
 					"zh-Hant": "三首來自世嘉開發的街機節奏遊戲\n《CHUNITHM》的震撼新曲\n已於天際展露鋒芒！\n\n跟隨對立與中二企鵝一起\n共同開始這一系列里程碑式的挑戰！",
 					"zh-Hans": "三首来自世嘉开发的街机节奏游戏\n《CHUNITHM》的震撼新曲\n已于天际展露锋芒！\n\n跟随对立与中二企鹅一起\n共同开始这一系列里程碑式的挑战！"
+				}
+			},
+			"arc_ver_link": {
+				"type": "object",
+				"properties": {
+					"ios": {
+						"type": "object",
+						"properties": {
+							"ver": {
+								"type": "string"
+							},
+							"link": {
+								"type": "string"
+							}
+						}
+					},
+					"android": {
+						"type": "object",
+						"properties": {
+							"ver": {
+								"type": "string"
+							},
+							"link": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			},
+			"arc_api_ver": {
+				"type": "object",
+				"properties": {
+					"major": {
+						"type": "number",
+						"minimum": 0,
+						"default": 12
+					},
+					"prefix": {
+						"type": "string",
+						"default": "/coffee"
+					},
+					"host": {
+						"type": "string",
+						"default": "https://arcapi.lowiro.com"
+					}
+				},
+				"example": {
+					"major": 9,
+					"prefix": "",
+					"host": "https://arcapi.lowiro.com"
+				}
+			},
+			"recent_score": {
+				"type": "object",
+				"properties": {
+					"song_id": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3
+						]
+					},
+					"score": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 100000000
+					},
+					"shiny_perfect_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"perfect_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"near_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"miss_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"clear_type": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"best_clear_type": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"health": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 100
+					},
+					"time_played": {
+						"type": "number"
+					},
+					"modifier": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"rating": {
+						"type": "number",
+						"minimum": 0
+					}
+				},
+				"example": {
+					"song_id": "grievouslady",
+					"difficulty": 2,
+					"score": 0,
+					"shiny_perfect_count": 0,
+					"perfect_count": 0,
+					"near_count": 0,
+					"miss_count": 0,
+					"clear_type": 0,
+					"best_clear_type": 0,
+					"health": 0,
+					"time_played": 1145141145141,
+					"modifier": 0,
+					"rating": 0
+				}
+			},
+			"arc_user": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"user_id": {
+						"type": "number",
+						"minimum": 1
+					},
+					"recent_score": {
+						"type": "object",
+						"$ref": "#/components/schemas/recent_score",
+						"nullable": true
+					},
+					"character": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							6,
+							7,
+							8,
+							9,
+							10,
+							11,
+							12,
+							13,
+							14,
+							15,
+							16,
+							17,
+							18,
+							19,
+							20,
+							21,
+							22,
+							23,
+							24,
+							25,
+							26,
+							27,
+							28,
+							29,
+							30,
+							31,
+							32,
+							33,
+							34,
+							35,
+							36
+						]
+					},
+					"join_date": {
+						"type": "number"
+					},
+					"rating": {
+						"type": "number"
+					},
+					"is_skill_sealed": {
+						"type": "boolean"
+					},
+					"is_char_uncapped": {
+						"type": "boolean"
+					},
+					"is_char_uncapped_override": {
+						"type": "boolean"
+					},
+					"is_mutual": {
+						"type": "boolean"
+					}
+				},
+				"example": {
+					"user_id": 114514,
+					"name": "114514",
+					"recent_score": {
+						"song_id": "grievouslady",
+						"difficulty": 2,
+						"score": 0,
+						"shiny_perfect_count": 0,
+						"perfect_count": 0,
+						"near_count": 0,
+						"miss_count": 0,
+						"clear_type": 0,
+						"best_clear_type": 0,
+						"health": 0,
+						"time_played": 1145141145141,
+						"modifier": 0,
+						"rating": 0
+					},
+					"character": 0,
+					"join_date": 1145141145141,
+					"rating": 0,
+					"is_skill_sealed": false,
+					"is_char_uncapped": false,
+					"is_char_uncapped_override": false,
+					"is_mutual": false
+				}
+			},
+			"usercode": {
+				"type": "string",
+				"minLength": 9,
+				"maxLength": 9,
+				"example": "012345678"
+			},
+			"difficulty": {
+				"oneOf": [
+					{
+						"type": "string",
+						"enum": [
+							"pst",
+							"prs",
+							"ftr",
+							"byn",
+							"past",
+							"present",
+							"future",
+							"beyond"
+						]
+					},
+					{
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3
+						]
+					}
+				]
+			},
+			"best_score": {
+				"type": "object",
+				"properties": {
+					"song_id": {
+						"type": "string"
+					},
+					"difficulty": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3
+						]
+					},
+					"score": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 100000000
+					},
+					"shiny_perfect_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"perfect_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"near_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"miss_count": {
+						"type": "number",
+						"minimum": 0
+					},
+					"clear_type": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"best_clear_type": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"health": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 100
+					},
+					"time_played": {
+						"type": "number"
+					},
+					"modifier": {
+						"type": "number",
+						"enum": [
+							0,
+							1,
+							2,
+							3,
+							4,
+							5
+						]
+					},
+					"rating": {
+						"type": "number",
+						"minimum": 0
+					},
+					"is_skill_sealed": {
+						"type": "boolean",
+						"default": false
+					},
+					"is_char_uncapped": {
+						"type": "boolean",
+						"default": false
+					}
+				},
+				"example": {
+					"song_id": "grievouslady",
+					"difficulty": 2,
+					"score": 0,
+					"shiny_perfect_count": 0,
+					"perfect_count": 0,
+					"near_count": 0,
+					"miss_count": 0,
+					"health": 0,
+					"modifier": 0,
+					"time_played": 114514145141,
+					"best_clear_type": 0,
+					"clear_type": 0,
+					"character": 0,
+					"is_skill_sealed": false,
+					"is_char_uncapped": false,
+					"rating": 0.0000
 				}
 			}
 		}
