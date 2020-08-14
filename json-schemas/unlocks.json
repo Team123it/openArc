@@ -1,0 +1,262 @@
+{
+	"id": "arcaea-unlocks-v1",
+	"description": "Validate legal format of Arcaea unlocks file",
+	"$schema": "http://json-schema.org/draft-06/schema#",
+	"type": "object",
+	"title": "Arcaea unlocks schema",
+	"required": [
+		"unlocks"
+	],
+	"properties": {
+		"unlocks": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/unlock_base"
+			}
+		}
+	},
+	"definitions": {
+		"unlock_base": {
+			"type": "object",
+			"required": [
+				"songId",
+				"ratingClass",
+				"conditions"
+			],
+			"properties": {
+				"songId": {
+					"type": "string"
+				},
+				"ratingClass": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3
+					]
+				},
+				"conditions": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/song_unlock"
+							},
+							{
+								"$ref": "#/definitions/song_unlock_chained"
+							},
+							{
+								"$ref": "#/definitions/song_clear_times"
+							},
+							{
+								"$ref": "#/definitions/potential_unlock"
+							},
+							{
+								"$ref": "#/definitions/multiple_conditions"
+							},
+							{
+								"$ref": "#/definitions/frag_unlock"
+							},
+							{
+								"$ref": "#/definitions/special_unlock"
+							}
+						]
+					}
+				}
+			}
+		},
+		"frag_unlock": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 0
+				},
+				"credit": {
+					"type": "number",
+					"minimum": 0
+				}
+			}
+		},
+		"song_unlock": {
+			"type": "object",
+			"required": [
+				"type",
+				"song_difficulty",
+				"song_id",
+				"grade"
+			],
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 1
+				},
+				"song_id": {
+					"type": "string"
+				},
+				"song_difficulty": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3
+					]
+				},
+				"grade": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			}
+		},
+		"song_unlock_chained": {
+			"type": "object",
+			"required": [
+				"type",
+				"song_id",
+				"song_difficulty"
+			],
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 2
+				},
+				"song_id": {
+					"type": "string"
+				},
+				"song_difficulty": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			}
+		},
+		"song_clear_times": {
+			"type": "object",
+			"required": [
+				"type",
+				"song_difficulty",
+				"song_id",
+				"grade",
+				"times"
+			],
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 3
+				},
+				"song_id": {
+					"type": "string"
+				},
+				"song_difficulty": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3
+					]
+				},
+				"grade": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				},
+				"times": {
+					"type": "number",
+					"minimum": 0
+				}
+			}
+		},
+		"multiple_conditions": {
+			"type": "object",
+			"required": [
+				"type",
+				"conditions"
+			],
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 4
+				},
+				"conditions": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/song_unlock"
+							},
+							{
+								"$ref": "#/definitions/song_unlock_chained"
+							},
+							{
+								"$ref": "#/definitions/song_clear_times"
+							},
+							{
+								"$ref": "#/definitions/potential_unlock"
+							},
+							{
+								"$ref": "#/definitions/frag_unlock"
+							},
+							{
+								"$ref": "#/definitions/special_unlock"
+							}
+						]
+					}
+				}
+			}
+		},
+		"potential_unlock": {
+			"type": "object",
+			"required": [
+				"type",
+				"rating"
+			],
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 5
+				},
+				"rating": {
+					"type": "number",
+					"minimum": 0
+				}
+			}
+		},
+		"special_unlock": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "number",
+					"const": 101
+				},
+				"min": {
+					"type": "number",
+					"minimum": 0
+				},
+				"max": {
+					"type": "number",
+					"maximum": 100
+				}
+			}
+		}
+	}
+}

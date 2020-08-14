@@ -368,7 +368,7 @@
 				}
 			}
 		},
-		"/userinfo": {
+		"/game/userinfo": {
 			"summary": "Get basic user info",
 			"parameters": [
 				{
@@ -403,7 +403,7 @@
 				}
 			}
 		},
-		"/userbest": {
+		"/game/userbest": {
 			"summary": "Get user best score",
 			"parameters": [
 				{
@@ -450,8 +450,8 @@
 				}
 			}
 		},
-		"/userbest30": {
-			"summary": "Get user best top 30 score.",
+		"/game/userbest30": {
+			"summary": "Get user's best top 30 score.",
 			"parameters": [
 				{
 					"in": "query",
@@ -496,12 +496,195 @@
 			}
 		},
 		"/songinfo": {
+			"summary": "Get song info by name",
+			"parameters": [
+				{
+					"in": "query",
+					"required": true,
+					"name": "songname",
+					"schema": {
+						"type": "string",
+						"description": "any song name for fuzzy querying"
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Song"
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"$ref": "#/components/schemas/Song"
+								}
+							}
+						}
+					}
+				}
+			}
 		},
 		"/songalias": {
+			"summary": "Get song id by songalias query",
+			"parameters": [
+				{
+					"in": "query",
+					"required": true,
+					"name": "songname",
+					"schema": {
+						"type": "string",
+						"description": "any song name for fuzzy querying"
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										}
+									}
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		},
 		"/random": {
+			"summary": "Get a random song in Arcaea",
+			"parameters": [
+				{
+					"in": "query",
+					"name": "start",
+					"schema": {
+						"type": "number",
+						"minimum": 2,
+						"maximum": 23,
+						"description": "range of start"
+					}
+				},
+				{
+					"in": "query",
+					"name": "end",
+					"schema": {
+						"type": "number",
+						"minimum": 2,
+						"maximum": 23,
+						"description": "range of end"
+					}
+				},
+				{
+					"in": "query",
+					"name": "info",
+					"schema": {
+						"type": "boolean",
+						"description": "returns song info when set true"
+					}
+				}
+			],
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"rating_class": {
+											"type": "number",
+											"enum": [
+												0,
+												1,
+												2,
+												3
+											]
+										},
+										"song_info": {
+											"$ref": "#/components/schemas/Song",
+											"nullable": true
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		},
-		"/connect": {
+		"/game/connect": {
+			"summary": "Get lowest.world/connect code",
+			"get": {
+				"tags": [
+					"standard"
+				],
+				"responses": {
+					"200": {
+						"description": "ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"key": {
+											"type": "string"
+										}
+									}
+								}
+							},
+							"application/xml": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"key": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/arc/alloc": {
+		},
+		"/arc/forward": {
+		},
+		"/arc/recycle": {
 		}
 	},
 	"components": {
@@ -591,46 +774,138 @@
 			},
 			"Song": {
 				"type": "object",
-				"example": {
-					"id": "arcahv",
-					"title_localized": {
-						"en": "Arcahv"
+				"required": [
+					"id"
+				],
+				"properties": {
+					"id": {
+						"type": "string"
 					},
-					"artist": "Feryquitous",
-					"bpm": "191",
-					"bpm_base": 191,
+					"title_localized": {
+						"type": "object",
+						"items": {
+							"type": "object",
+							"required": [
+								"en"
+							],
+							"properties": {
+								"en": {
+									"type": "string"
+								},
+								"ja": {
+									"type": "string",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"artist": {
+						"type": "string"
+					},
+					"bpm": {
+						"type": "string"
+					},
+					"bpm_base": {
+						"type": "number"
+					},
+					"set": {
+						"type": "string"
+					},
+					"audioTimeSec": {
+						"type": "number",
+						"minimum": 0
+					},
+					"side": {
+						"type": "number",
+						"enum": [
+							0,
+							1
+						]
+					},
+					"remote_dl": {
+						"type": "boolean",
+						"default": true
+					},
+					"world_unlock": {
+						"type": "boolean",
+						"default": false
+					},
+					"date": {
+						"type": "number",
+						"minimum": 0
+					},
+					"difficulties": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"ratingClass": {
+									"type": "number",
+									"enum": [
+										0,
+										1,
+										2,
+										3
+									]
+								},
+								"chartDesigner": {
+									"type": "string"
+								},
+								"jacketDesigner": {
+									"type": "string"
+								},
+								"rating": {
+									"type": "number",
+									"minimum": 0
+								},
+								"ratingReal": {
+									"type": "number",
+									"minimum": 0
+								},
+								"ratingPlus": {
+									"type": "boolean",
+									"nullable": true,
+									"default": false
+								}
+							}
+						}
+					}
+				},
+				"example": {
+					"id": "ifi",
+					"title_localized": {
+						"en": "#1f1e33"
+					},
+					"artist": "かめりあ(EDP)",
+					"bpm": "181",
+					"bpm_base": 181,
 					"set": "vs",
-					"purchase": "vs",
-					"audioPreview": 1256,
-					"audioPreviewEnd": 31413,
-					"side": 0,
-					"bg": "arcahv",
-					"remote_dl": false,
+					"audioTimeSec": 163,
+					"side": 1,
+					"remote_dl": true,
 					"world_unlock": false,
-					"songlist_hidden": true,
-					"date": 1590537606,
-					"version": "3.0",
+					"date": 1590537604,
 					"difficulties": [
 						{
 							"ratingClass": 0,
-							"chartDesigner": "∅",
-							"jacketDesigner": "シエラ",
-							"rating": 4,
-							"hidden_until_unlocked": true
+							"chartDesigner": "夜浪",
+							"jacketDesigner": "望月けい",
+							"rating": 5,
+							"ratingReal": 5.5
 						},
 						{
 							"ratingClass": 1,
-							"chartDesigner": "∅",
-							"jacketDesigner": "シエラ",
-							"rating": 7,
-							"hidden_until_unlocked": true
+							"chartDesigner": "夜浪",
+							"jacketDesigner": "望月けい",
+							"rating": 9,
+							"ratingReal": 9.2
 						},
 						{
 							"ratingClass": 2,
-							"chartDesigner": "∅",
-							"jacketDesigner": "シエラ",
-							"rating": 9,
-							"hidden_until_unlocked": true,
+							"chartDesigner": "夜浪 VS 東星 \"Convergence\"",
+							"jacketDesigner": "望月けい",
+							"rating": 10,
+							"ratingReal": 10.9,
 							"ratingPlus": true
 						}
 					]
