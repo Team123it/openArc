@@ -39,6 +39,9 @@
 				},
 				"custom_banner": {
 					"type": "boolean"
+				},
+				"pack_parent": {
+					"type": "string"
 				}
 			}
 		},
