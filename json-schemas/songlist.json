@@ -125,6 +125,9 @@
 				"no_pp": {
 					"type": "boolean"
 				},
+				"no_stream": {
+					"type": "boolean"
+				},
 				"jacket_localized": {
 					"type": "object",
 					"patternProperties": {
